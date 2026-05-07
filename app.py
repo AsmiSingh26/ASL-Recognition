@@ -87,11 +87,25 @@ def load_model():
     with open("models/label_map.json") as f:
         label_map = json.load(f)
     idx_to_label = {v: k for k, v in label_map.items()}
-    hands = mp.solutions.hands.Hands(
-        static_image_mode=True,
-        max_num_hands=1,
-        min_detection_confidence=0.5
+    from mediapipe.tasks import python as mp_python
+from mediapipe.tasks.python import vision
+import urllib.request
+
+# Download hand landmarker model
+model_path = "hand_landmarker.task"
+if not os.path.exists(model_path):
+    urllib.request.urlretrieve(
+        "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+        model_path
     )
+
+base_options = mp_python.BaseOptions(model_asset_path=model_path)
+options = vision.HandLandmarkerOptions(
+    base_options=base_options,
+    num_hands=1,
+    min_hand_detection_confidence=0.5
+)
+hands = vision.HandLandmarker.create_from_options(options)
     return model, idx_to_label, hands
 
 model, idx_to_label, hands = load_model()
@@ -106,32 +120,29 @@ def normalize(landmarks):
 
 def predict_image(img_bgr):
     rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
-    result = hands.process(rgb)
+    mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
+    result = hands.detect(mp_image)
 
-    if not result.multi_hand_landmarks:
+    if not result.hand_landmarks:
         return None, None, None, "No hand detected"
 
-    hand = result.multi_hand_landmarks[0]
+    hand = result.hand_landmarks[0]
     h, w, _ = img_bgr.shape
-    pts = [(int(lm.x*w), int(lm.y*h), lm.z) for lm in hand.landmark]
+    pts = [(int(lm.x*w), int(lm.y*h), lm.z) for lm in hand]
     feat = normalize(pts).reshape(1, -1)
     probs = model.predict(feat, verbose=0)[0]
 
     top3_idx = np.argsort(probs)[::-1][:3]
     top1_conf = probs[top3_idx[0]]
     top1_label = idx_to_label[top3_idx[0]]
-
     top3 = [(idx_to_label[i], float(probs[i])) for i in top3_idx]
 
-    # Draw landmarks on image
-    mp.solutions.drawing_utils.draw_landmarks(
-        img_bgr,
-        hand,
-        mp.solutions.hands.HAND_CONNECTIONS
-    )
+    # Draw landmarks
+    for lm in hand:
+        cx, cy = int(lm.x*w), int(lm.y*h)
+        cv2.circle(img_bgr, (cx, cy), 5, (0, 255, 0), -1)
 
     return top1_label, float(top1_conf), top3, None
-
 # ── Header ──
 st.markdown('<div class="main-header">🤟 ASL Recognition System</div>',
             unsafe_allow_html=True)
