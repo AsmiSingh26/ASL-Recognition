@@ -1,9 +1,9 @@
 streamlit
-tensorflow-cpu==2.13.0
-mediapipe==0.10.14
-opencv-contrib-python-headless==4.8.0.76
-numpy==1.24.3
-protobuf==3.20.3
+tensorflow-cpu
+mediapipe
+opencv-contrib-python-headless
+numpy
+protobuf
 seaborn
 matplotlib
 scikit-learn
