@@ -8,7 +8,7 @@ A real-time American Sign Language (ASL) alphabet recognition system built with 
 
 ## 📸 Demo
 
-![ASL Recognition App](confusion_matrix.png)
+<img width="1823" height="855" alt="image" src="https://github.com/user-attachments/assets/f2309193-22a8-4a32-9436-db54b4dcfe41" />
 
 ---
 
