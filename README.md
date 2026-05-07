@@ -49,6 +49,7 @@ This system recognizes all 26 ASL alphabet letters plus `del`, `space`, and `not
 ---
 
 ## 🏗️ System Architecture
+
 Webcam / Image
 ↓
 MediaPipe Hand Detection
