@@ -1,7 +1,7 @@
 streamlit
 tensorflow-cpu
 mediapipe
-opencv-contrib-python-headless
+opencv-python-headless
 numpy
 protobuf
 seaborn
