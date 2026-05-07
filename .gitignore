@@ -1,0 +1,8 @@
+asl-env/
+data/train/
+data/test/
+data/extracted/
+__pycache__/
+*.pyc
+.streamlit/
+logs/
