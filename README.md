@@ -7,6 +7,7 @@ A real-time American Sign Language (ASL) alphabet recognition system built with 
 ---
 
 ## 📸 Demo
+<img width="1823" height="833" alt="Screenshot 2026-05-08 031256" src="https://github.com/user-attachments/assets/02f1aa16-c373-4ed3-8be8-2f3cc056d1e8" />
 
 <img width="1823" height="855" alt="image" src="https://github.com/user-attachments/assets/f2309193-22a8-4a32-9436-db54b4dcfe41" />
 
